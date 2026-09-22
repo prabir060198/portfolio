@@ -788,4 +788,289 @@ if (canvas) {
         }
     );
 
+    /* =========================================
+   Chrome-style Dino Runner Animation
+========================================= */
+
+const dinoCanvas = document.getElementById("dinoCanvas");
+
+if (dinoCanvas) {
+
+    const ctx = dinoCanvas.getContext("2d");
+
+    let width = 0;
+    let height = 0;
+    let dpr = window.devicePixelRatio || 1;
+
+    let dinoX = -80;
+    let speed = 2.5;
+
+    let obstacles = [];
+    let clouds = [];
+
+    let lastTime = 0;
+    let obstacleTimer = 0;
+    let cloudTimer = 0;
+
+    function resizeDinoCanvas() {
+
+        const rect = dinoCanvas.getBoundingClientRect();
+
+        width = rect.width;
+        height = rect.height;
+
+        dpr = Math.min(window.devicePixelRatio || 1, 2);
+
+        dinoCanvas.width = width * dpr;
+        dinoCanvas.height = height * dpr;
+
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+
+    window.addEventListener("resize", resizeDinoCanvas);
+
+    resizeDinoCanvas();
+
+
+    /* -----------------------------
+       Draw Dinosaur
+    ----------------------------- */
+
+    function drawDino(x, y, scale) {
+
+        ctx.save();
+
+        ctx.translate(x, y);
+        ctx.scale(scale, scale);
+
+        ctx.fillStyle = "#ffffff";
+
+        // Body
+        ctx.fillRect(10, 15, 28, 22);
+
+        // Head
+        ctx.fillRect(30, 5, 18, 20);
+
+        // Snout
+        ctx.fillRect(45, 12, 10, 8);
+
+        // Tail
+        ctx.fillRect(3, 20, 10, 6);
+
+        // Legs
+        ctx.fillRect(15, 35, 6, 12);
+        ctx.fillRect(30, 35, 6, 12);
+
+        // Arms
+        ctx.fillRect(37, 25, 12, 5);
+
+        // Eye
+        ctx.fillStyle = "#071018";
+        ctx.fillRect(41, 9, 3, 3);
+
+        ctx.restore();
+    }
+
+
+    /* -----------------------------
+       Draw Cactus
+    ----------------------------- */
+
+    function drawCactus(x, y, scale) {
+
+        ctx.save();
+
+        ctx.translate(x, y);
+        ctx.scale(scale, scale);
+
+        ctx.fillStyle = "#00d9ff";
+
+        // Main stem
+        ctx.fillRect(8, 0, 8, 38);
+
+        // Left arm
+        ctx.fillRect(0, 15, 8, 6);
+        ctx.fillRect(0, 10, 5, 11);
+
+        // Right arm
+        ctx.fillRect(16, 20, 8, 6);
+        ctx.fillRect(19, 14, 5, 12);
+
+        ctx.restore();
+    }
+
+
+    /* -----------------------------
+       Draw Cloud
+    ----------------------------- */
+
+    function drawCloud(x, y, scale) {
+
+        ctx.save();
+
+        ctx.translate(x, y);
+        ctx.scale(scale, scale);
+
+        ctx.strokeStyle = "rgba(255,255,255,0.35)";
+        ctx.lineWidth = 1.5;
+
+        ctx.beginPath();
+
+        ctx.moveTo(0, 15);
+        ctx.lineTo(12, 15);
+
+        ctx.arc(16, 12, 6, Math.PI, Math.PI * 2);
+
+        ctx.arc(25, 10, 8, Math.PI, Math.PI * 2);
+
+        ctx.arc(35, 13, 6, Math.PI, Math.PI * 2);
+
+        ctx.lineTo(45, 15);
+
+        ctx.stroke();
+
+        ctx.restore();
+    }
+
+
+    /* -----------------------------
+       Create obstacle
+    ----------------------------- */
+
+    function createObstacle() {
+
+        obstacles.push({
+            x: width + 30,
+            y: height - 50,
+            scale: 0.8 + Math.random() * 0.5
+        });
+    }
+
+
+    /* -----------------------------
+       Create cloud
+    ----------------------------- */
+
+    function createCloud() {
+
+        clouds.push({
+            x: width + 50,
+            y: 15 + Math.random() * 30,
+            scale: 0.7 + Math.random() * 0.5
+        });
+    }
+
+
+    /* -----------------------------
+       Animation
+    ----------------------------- */
+
+    function animate(time) {
+
+        const delta = time - lastTime;
+        lastTime = time;
+
+        ctx.clearRect(0, 0, width, height);
+
+
+        /* Ground */
+
+        const groundY = height - 25;
+
+        ctx.strokeStyle = "rgba(255,255,255,0.7)";
+        ctx.lineWidth = 1;
+
+        ctx.beginPath();
+        ctx.moveTo(0, groundY);
+        ctx.lineTo(width, groundY);
+        ctx.stroke();
+
+
+        /* Clouds */
+
+        cloudTimer += delta;
+
+        if (cloudTimer > 2800) {
+
+            createCloud();
+
+            cloudTimer = 0;
+        }
+
+        clouds.forEach(cloud => {
+
+            cloud.x -= speed * 0.35;
+
+            drawCloud(
+                cloud.x,
+                cloud.y,
+                cloud.scale
+            );
+
+        });
+
+        clouds = clouds.filter(
+            cloud => cloud.x > -100
+        );
+
+
+        /* Obstacles */
+
+        obstacleTimer += delta;
+
+        if (obstacleTimer > 1600 + Math.random() * 1800) {
+
+            createObstacle();
+
+            obstacleTimer = 0;
+        }
+
+        obstacles.forEach(obstacle => {
+
+            obstacle.x -= speed;
+
+            drawCactus(
+                obstacle.x,
+                groundY - 38,
+                obstacle.scale
+            );
+
+        });
+
+        obstacles = obstacles.filter(
+            obstacle => obstacle.x > -100
+        );
+
+
+        /* Dinosaur */
+
+        dinoX += speed * 0.8;
+
+        const dinoScale =
+            width < 600 ? 0.75 : 1;
+
+        const dinoWidth = 55 * dinoScale;
+
+        if (dinoX > width + 40) {
+
+            dinoX = -dinoWidth;
+        }
+
+        const dinoY =
+            groundY - (47 * dinoScale);
+
+        drawDino(
+            dinoX,
+            dinoY,
+            dinoScale
+        );
+
+
+        requestAnimationFrame(animate);
+    }
+
+
+    requestAnimationFrame(animate);
+}
+
 }

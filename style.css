@@ -112,26 +112,20 @@ button {
 
     background-image:
 
-        linear-gradient(
-            rgba(255, 255, 255, 0.025) 1px,
-            transparent 1px
-        ),
+        linear-gradient(rgba(255, 255, 255, 0.025) 1px,
+            transparent 1px),
 
-        linear-gradient(
-            90deg,
+        linear-gradient(90deg,
             rgba(255, 255, 255, 0.025) 1px,
-            transparent 1px
-        );
+            transparent 1px);
 
     background-size: 50px 50px;
 
     mask-image:
 
-        linear-gradient(
-            to bottom,
+        linear-gradient(to bottom,
             black,
-            transparent
-        );
+            transparent);
 
 }
 
@@ -303,10 +297,8 @@ footer {
 
 .section {
 
-    width: min(
-        var(--max-width),
-        90%
-    );
+    width: min(var(--max-width),
+            90%);
 
     margin: auto;
 
@@ -360,8 +352,7 @@ footer {
     display: grid;
 
     grid-template-columns:
-        1.2fr
-        0.8fr;
+        1.2fr 0.8fr;
 
     align-items: center;
 
@@ -397,11 +388,9 @@ footer {
 .hero h1 {
 
     font-size:
-        clamp(
-            55px,
+        clamp(55px,
             8vw,
-            100px
-        );
+            100px);
 
     line-height: 0.95;
 
@@ -499,8 +488,7 @@ footer {
     transform: translateY(-3px);
 
     box-shadow:
-        0 0 30px
-        rgba(0, 229, 255, 0.25);
+        0 0 30px rgba(0, 229, 255, 0.25);
 
 }
 
@@ -578,8 +566,7 @@ footer {
     inset: -20px;
 
     border:
-        1px solid
-        rgba(0, 229, 255, 0.4);
+        1px solid rgba(0, 229, 255, 0.4);
 
     border-radius: 50%;
 
@@ -624,15 +611,13 @@ footer {
     overflow: hidden;
 
     border:
-        2px solid
-        rgba(0, 229, 255, 0.4);
+        2px solid rgba(0, 229, 255, 0.4);
 
     background:
         var(--bg-secondary);
 
     box-shadow:
-        0 0 60px
-        rgba(0, 229, 255, 0.12);
+        0 0 60px rgba(0, 229, 255, 0.12);
 
 }
 
@@ -658,8 +643,7 @@ footer {
         rgba(10, 15, 25, 0.9);
 
     border:
-        1px solid
-        rgba(0, 229, 255, 0.3);
+        1px solid rgba(0, 229, 255, 0.3);
 
     color: var(--accent);
 
@@ -875,8 +859,7 @@ footer {
         rgba(0, 229, 255, 0.03);
 
     box-shadow:
-        0 15px 50px
-        rgba(0, 229, 255, 0.05);
+        0 15px 50px rgba(0, 229, 255, 0.05);
 
 }
 
@@ -1003,11 +986,9 @@ footer {
         1px solid var(--border);
 
     background:
-        linear-gradient(
-            145deg,
+        linear-gradient(145deg,
             rgba(255, 255, 255, 0.04),
-            rgba(255, 255, 255, 0.01)
-        );
+            rgba(255, 255, 255, 0.01));
 
     position: relative;
 
@@ -1262,11 +1243,9 @@ footer {
 .contact-box h2 {
 
     font-size:
-        clamp(
-            35px,
+        clamp(35px,
             5vw,
-            65px
-        );
+            65px);
 
     margin: 20px 0 35px;
 
@@ -1489,6 +1468,49 @@ footer a:hover {
 
 }
 
+/* ================================
+   Dino Runner Animation
+================================ */
+
+.dino-section {
+    width: 100%;
+    height: 150px;
+    position: relative;
+    overflow: hidden;
+    margin-top: 20px;
+    margin-bottom: 40px;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+#dinoCanvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+    .dino-section {
+        height: 110px;
+        margin-top: 10px;
+        margin-bottom: 30px;
+    }
+}
+
+@media (max-width: 480px) {
+    .dino-section {
+        height: 90px;
+    }
+}
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+    .dino-section {
+        display: none;
+    }
+}
+
 
 
 /* =========================================================
@@ -1544,7 +1566,114 @@ footer a:hover {
 
 }
 
+/* ================================
+   STAT CARD PARTICLES
+================================ */
 
+.stat-card {
+    position: relative;
+    overflow: hidden;
+}
+
+/* Keep content above particles */
+
+.stat-card strong,
+.stat-card span {
+    position: relative;
+    z-index: 3;
+}
+
+
+/* Particle container */
+
+.stat-particles {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+}
+
+
+/* Individual particles */
+
+.stat-particles i {
+    position: absolute;
+
+    width: 3px;
+    height: 3px;
+
+    border-radius: 50%;
+
+    background: #00d9ff;
+
+    box-shadow:
+        0 0 6px #00d9ff,
+        0 0 12px rgba(0, 217, 255, 0.6);
+
+    opacity: 0.7;
+
+    animation: floatingParticle 4s ease-in-out infinite;
+}
+
+
+/* Different positions */
+
+.stat-particles i:nth-child(1) {
+    left: 10%;
+    top: 25%;
+    animation-delay: 0s;
+}
+
+.stat-particles i:nth-child(2) {
+    left: 25%;
+    top: 70%;
+    animation-delay: 0.8s;
+}
+
+.stat-particles i:nth-child(3) {
+    left: 50%;
+    top: 20%;
+    animation-delay: 1.4s;
+}
+
+.stat-particles i:nth-child(4) {
+    left: 70%;
+    top: 65%;
+    animation-delay: 2s;
+}
+
+.stat-particles i:nth-child(5) {
+    left: 85%;
+    top: 30%;
+    animation-delay: 2.7s;
+}
+
+.stat-particles i:nth-child(6) {
+    left: 60%;
+    top: 85%;
+    animation-delay: 3.2s;
+}
+
+
+/* Animation */
+
+@keyframes floatingParticle {
+
+    0% {
+        transform: translate(0, 0);
+        opacity: 0.2;
+    }
+
+    50% {
+        transform: translate(-8px, -15px);
+        opacity: 1;
+    }
+
+    100% {
+        transform: translate(8px, -30px);
+        opacity: 0.1;
+    }
+}
 
 /* =========================================================
    REDUCE MOTION
